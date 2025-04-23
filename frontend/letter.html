@@ -1,0 +1,547 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Carta - PastelFeed</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f5fc;
+            color: #4a4a4a;
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .letter-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(170, 143, 220, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .welcome-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0e5ff;
+        }
+        
+        .welcome-header h1 {
+            color: #9d7cd5;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        .welcome-header p {
+            color: #9c9c9c;
+            font-weight: 300;
+            font-size: 1rem;
+        }
+        
+        .letter-editor {
+            margin: 30px 0;
+            padding: 25px;
+            background-color: #faf7ff;
+            border-radius: 10px;
+            border: 1px solid #f0e5ff;
+            transition: all 0.3s ease;
+        }
+        
+        .letter-editor:hover {
+            box-shadow: 0 6px 15px rgba(170, 143, 220, 0.1);
+        }
+        
+        .letter-editor h2 {
+            color: #7c5cbf;
+            font-weight: 500;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .letter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            font-weight: 500;
+            color: #7d7d7d;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input, .form-group textarea {
+            padding: 12px 15px;
+            border: 1px solid #e9deff;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            color: #555;
+            transition: all 0.3s ease;
+            background-color: #ffffff;
+        }
+        
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #9d7cd5;
+            box-shadow: 0 0 0 3px rgba(157, 124, 213, 0.15);
+        }
+        
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        
+        .btn-save {
+            background-color: #9d7cd5;
+            color: white;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            align-self: flex-end;
+            margin-top: 5px;
+        }
+        
+        .btn-save:hover {
+            background-color: #8a6bc7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(157, 124, 213, 0.2);
+        }
+        
+        .btn-save:active {
+            transform: translateY(0);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            align-items: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .nav-btn {
+            padding: 10px 16px;
+            background-color: transparent;
+            border: 1px solid #f0e5ff;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #7c5cbf;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: #f0e5ff;
+            color: #6a4db5;
+        }
+        
+        .logout-btn {
+            background-color: #fff0f0;
+            color: #e27979;
+            border: 1px solid #ffd5d5;
+        }
+        
+        .logout-btn:hover {
+            background-color: #ffdddd;
+            color: #d86565;
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid rgba(157, 124, 213, 0.1);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border-left-color: #9d7cd5;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Mensaje de error */
+        .error-message {
+            color: #e27979;
+            text-align: center;
+            margin: 20px 0;
+            padding: 12px;
+            background-color: #fff0f0;
+            border-radius: 8px;
+            border: 1px solid #ffd5d5;
+            font-size: 0.9rem;
+        }
+        
+        /* Mensaje de éxito */
+        .success-message {
+            color: #5cb176;
+            text-align: center;
+            margin: 20px 0;
+            padding: 12px;
+            background-color: #f0fff6;
+            border-radius: 8px;
+            border: 1px solid #d5ffdc;
+            font-size: 0.9rem;
+        }
+        
+        /* Estilos para usuarios no autenticados */
+        .not-authenticated {
+            text-align: center;
+            margin: 60px 0;
+            padding: 30px;
+            background-color: #faf7ff;
+            border-radius: 10px;
+        }
+        
+        .not-authenticated h2 {
+            color: #7c5cbf;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .not-authenticated p {
+            color: #9c9c9c;
+            margin-bottom: 25px;
+        }
+        
+        .login-link {
+            display: inline-block;
+            background-color: #9d7cd5;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .login-link:hover {
+            background-color: #8a6bc7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(157, 124, 213, 0.2);
+        }
+        
+        /* Estilos para la carta guardada */
+        .saved-letter {
+            margin-top: 30px;
+            padding: 25px;
+            border: 1px solid #f0e5ff;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(170, 143, 220, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .saved-letter:hover {
+            box-shadow: 0 6px 20px rgba(170, 143, 220, 0.12);
+        }
+        
+        .saved-letter h3 {
+            margin-top: 0;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0e5ff;
+            color: #7c5cbf;
+            font-weight: 500;
+            font-size: 1.3rem;
+        }
+        
+        .saved-letter p {
+            white-space: pre-wrap;
+            line-height: 1.7;
+            color: #575757;
+            font-size: 1rem;
+            padding: 5px 0;
+        }
+        
+        .saved-letter .meta {
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: #9c9c9c;
+            text-align: right;
+            font-style: italic;
+        }
+        
+        .letter-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn-edit {
+            background-color: #9d7cd5;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .btn-edit:hover {
+            background-color: #8a6bc7;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .letter-container {
+                margin: 20px 15px;
+                padding: 20px;
+            }
+            
+            .welcome-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .letter-editor {
+                padding: 20px;
+            }
+            
+            .form-group input, .form-group textarea {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="letter-container">
+        <div class="navigation">
+            <div class="nav-links">
+                <a href="/" class="nav-btn">Inicio</a>
+                <a href="/feed" class="nav-btn">Feed</a>
+            </div>
+            <button id="logout-btn" class="nav-btn logout-btn">Cerrar Sesión</button>
+        </div>
+        
+        <div id="loading" class="spinner"></div>
+        
+        <div id="error-container" class="error-message" style="display: none;"></div>
+        
+        <div id="not-authenticated" class="not-authenticated" style="display: none;">
+            <h2>No has iniciado sesión</h2>
+            <p>Debes iniciar sesión para ver o crear tu carta.</p>
+            <a href="/" class="login-link">Iniciar Sesión</a>
+        </div>
+        
+        <div id="authenticated-content" style="display: none;">
+            <div class="welcome-header">
+                <h1>Hello <span id="user-name">Usuario</span></h1>
+                <p>Aquí puedes escribir y guardar tus pensamientos en una carta personal.</p>
+            </div>
+            
+            <div class="letter-editor">
+                <h2>Mi Carta</h2>
+                <form id="letter-form" class="letter-form">
+                    <div class="form-group">
+                        <label for="letter-title">Título (opcional)</label>
+                        <input type="text" id="letter-title" name="title" placeholder="Escribe un título para tu carta...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="letter-content">Contenido</label>
+                        <textarea id="letter-content" name="content" placeholder="Escribe aquí tu carta..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-save">Guardar Carta</button>
+                </form>
+                <div id="save-success" class="success-message" style="display: none;"></div>
+            </div>
+            
+            <div id="saved-letter" class="saved-letter" style="display: none;">
+                <h3 id="saved-title">Título de la carta</h3>
+                <p id="saved-content">Contenido de la carta...</p>
+                <div class="meta">
+                    <div id="saved-date">Guardado: 01/01/2023</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingElement = document.getElementById('loading');
+            const errorContainer = document.getElementById('error-container');
+            const notAuthenticatedElement = document.getElementById('not-authenticated');
+            const authenticatedContent = document.getElementById('authenticated-content');
+            const userNameElement = document.getElementById('user-name');
+            const logoutButton = document.getElementById('logout-btn');
+            const letterForm = document.getElementById('letter-form');
+            const saveSuccessMessage = document.getElementById('save-success');
+            const savedLetterSection = document.getElementById('saved-letter');
+            const savedTitleElement = document.getElementById('saved-title');
+            const savedContentElement = document.getElementById('saved-content');
+            const savedDateElement = document.getElementById('saved-date');
+            
+            // Comprobar si el usuario está autenticado
+            checkAuthentication();
+            
+            // Event listeners
+            if (logoutButton) {
+                logoutButton.addEventListener('click', logout);
+            }
+            
+            if (letterForm) {
+                letterForm.addEventListener('submit', saveLetter);
+            }
+            
+            // Función para comprobar autenticación
+            function checkAuthentication() {
+                fetch('/api/session', {
+                    method: 'GET',
+                    credentials: 'include'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    loadingElement.style.display = 'none';
+                    
+                    if (data.loggedIn) {
+                        // Usuario autenticado
+                        authenticatedContent.style.display = 'block';
+                        userNameElement.textContent = data.user.displayName || data.user.username;
+                        loadExistingLetter();
+                    } else {
+                        // Usuario no autenticado
+                        notAuthenticatedElement.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    loadingElement.style.display = 'none';
+                    errorContainer.style.display = 'block';
+                    errorContainer.textContent = 'Error al verificar autenticación: ' + error.message;
+                });
+            }
+            
+            // Función para cargar carta existente
+            function loadExistingLetter() {
+                fetch('/api/letter', {
+                    method: 'GET',
+                    credentials: 'include'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.letter) {
+                        // Mostrar carta guardada
+                        const letter = data.letter;
+                        document.getElementById('letter-title').value = letter.title || '';
+                        document.getElementById('letter-content').value = letter.content || '';
+                        
+                        // Mostrar la carta guardada
+                        savedLetterSection.style.display = 'block';
+                        savedTitleElement.textContent = letter.title || 'Sin título';
+                        savedContentElement.textContent = letter.content;
+                        savedDateElement.textContent = 'Última actualización: ' + new Date(letter.updatedAt || letter.createdAt).toLocaleString();
+                    }
+                })
+                .catch(error => {
+                    errorContainer.style.display = 'block';
+                    errorContainer.textContent = 'Error al cargar carta: ' + error.message;
+                });
+            }
+            
+            // Función para guardar carta
+            function saveLetter(event) {
+                event.preventDefault();
+                
+                const title = document.getElementById('letter-title').value;
+                const content = document.getElementById('letter-content').value;
+                
+                if (!content.trim()) {
+                    errorContainer.style.display = 'block';
+                    errorContainer.textContent = 'El contenido de la carta no puede estar vacío';
+                    return;
+                }
+                
+                loadingElement.style.display = 'block';
+                errorContainer.style.display = 'none';
+                saveSuccessMessage.style.display = 'none';
+                
+                fetch('/api/letter/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        title: title,
+                        content: content
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    loadingElement.style.display = 'none';
+                    
+                    if (data.success) {
+                        // Mostrar mensaje de éxito
+                        saveSuccessMessage.style.display = 'block';
+                        saveSuccessMessage.textContent = 'Carta guardada correctamente';
+                        
+                        // Actualizar carta guardada
+                        savedLetterSection.style.display = 'block';
+                        savedTitleElement.textContent = title || 'Sin título';
+                        savedContentElement.textContent = content;
+                        savedDateElement.textContent = 'Última actualización: ' + new Date().toLocaleString();
+                    } else {
+                        throw new Error(data.error || 'Error al guardar la carta');
+                    }
+                })
+                .catch(error => {
+                    loadingElement.style.display = 'none';
+                    errorContainer.style.display = 'block';
+                    errorContainer.textContent = 'Error al guardar carta: ' + error.message;
+                });
+            }
+            
+            // Función para cerrar sesión
+            function logout() {
+                fetch('/api/logout', {
+                    method: 'GET',
+                    credentials: 'include'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/';
+                    } else {
+                        throw new Error('Error al cerrar sesión');
+                    }
+                })
+                .catch(error => {
+                    errorContainer.style.display = 'block';
+                    errorContainer.textContent = 'Error al cerrar sesión: ' + error.message;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

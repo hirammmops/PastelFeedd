@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>PastelFeed - Iniciar Sesión</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Navegación */
+    .navigation {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .nav-btn {
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      color: #a075d5;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+    .nav-btn:hover {
+      background-color: #f0e6ff;
+    }
+    .logout-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: inherit;
+      color: #e47a7a;
+    }
+    
+    /* Modal para registro */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      overflow: auto;
+      background: rgba(0,0,0,0.25);
+    }
+    .modal-content {
+      background: #fffafc;
+      border-radius: 18px;
+      box-shadow: 0 8px 28px rgba(145, 169, 189, 0.21);
+      margin: 8% auto;
+      padding: 2em 2em 1.5em 2em;
+      width: 340px;
+      max-width: 98vw;
+      position: relative;
+    }
+    .close-modal {
+      position: absolute; top:12px; right:18px; font-size: 1.5em; color:#ad85ad; cursor: pointer;
+    }
+    #registerError { color: #e47a7a; margin: 8px 0; text-align: center; display: none;}
+    .modal-content input { margin-bottom: .82em;}
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1 class="logo pastel">PastelFeed</h1>
+    <form id="loginForm" class="login-form" autocomplete="on">
+      <div class="input-group">
+        <input 
+          type="text" 
+          id="username" 
+          name="username" 
+          placeholder="Nombre de usuario" 
+          autocomplete="username" 
+          required
+        >
+      </div>
+      <div class="input-group">
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          placeholder="Contraseña" 
+          autocomplete="current-password" 
+          required
+        >
+      </div>
+      <button type="submit" class="btn-primary" id="loginBtn">Iniciar Sesión</button>
+      <button type="button" class="btn-secondary" id="registerBtn">Registrarse</button>
+    </form>
+    <div class="divider"></div>
+    <div class="o-auth">
+      <button class="oauth-btn google" type="button" id="googleLogin">Continuar con Google</button>
+      <button class="oauth-btn facebook" type="button" id="facebookLogin">Continuar con Facebook</button>
+    </div>
+    <div id="errorMsg" style="color:#e47a7a;text-align:center;margin-top:1em;display:none"></div>
+  </div>
+
+  <!-- NAVEGACIÓN (solo se mostrará cuando el usuario esté autenticado) -->
+  <div id="authenticated-navigation" class="navigation" style="display: none;">
+    <a href="/" class="nav-btn">Inicio</a>
+    <a href="/feed" class="nav-btn">Feed</a>
+    <a href="/letter" class="nav-btn">Letter</a>
+    <button id="logout-btn" class="nav-btn logout-btn">Cerrar Sesión</button>
+  </div>
+
+  <!-- MODAL REGISTRO -->
+  <div id="registerModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeModal">&times;</span>
+      <h2 style="font-weight:700;font-size:1.18em;text-align:center;color:#a075d5;margin-bottom:12px;">Crea tu cuenta</h2>
+      <form id="registerForm" autocomplete="on">
+        <input 
+          type="text" 
+          id="regUsername" 
+          name="username"
+          placeholder="Nombre de usuario" 
+          autocomplete="username" 
+          required 
+        />
+        <input 
+          type="email" 
+          id="regEmail" 
+          name="email"
+          placeholder="Correo electrónico" 
+          autocomplete="email" 
+          required 
+        />
+        <input 
+          type="password" 
+          id="regPassword" 
+          name="password"
+          placeholder="Contraseña" 
+          autocomplete="new-password" 
+          required 
+        />
+        <div id="registerError"></div>
+        <button type="submit" class="btn-primary" style="width:100%">Crear cuenta</button>
+      </form>
+    </div>
+  </div>
+  <script src="main.js"></script>
+  
+  <script>
+    // Script para verificar la autenticación del usuario y mostrar/ocultar la navegación
+    document.addEventListener('DOMContentLoaded', function() {
+      // Verificar si el usuario está autenticado
+      fetch('/api/session', {
+        method: 'GET',
+        credentials: 'include'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.loggedIn) {
+          // El usuario está autenticado, mostrar navegación
+          document.getElementById('authenticated-navigation').style.display = 'flex';
+          // Si el usuario ya está autenticado, redirigir al feed
+          window.location.href = '/feed';
+        } else {
+          // El usuario no está autenticado, ocultar navegación
+          document.getElementById('authenticated-navigation').style.display = 'none';
+        }
+      })
+      .catch(error => {
+        console.error('Error al verificar sesión:', error);
+        document.getElementById('authenticated-navigation').style.display = 'none';
+      });
+    });
+  </script>
+</body>
+</html>

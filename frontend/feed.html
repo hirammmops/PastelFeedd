@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>PastelFeed - Feed</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="feed.css">
+  <style>
+    /* Estilo mejorado para la sección de perfil */
+    .profile-section {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      position: relative;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      transition: background-color 0.2s;
+    }
+    
+    .profile-section:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .profile-wrapper {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .profile-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+
+    /* Estilo para el menú desplegable */
+    #dropdownMenu {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px;
+      background-color: #fff;
+      border: 1px solid #eee;
+      position: absolute;
+      top: 60px;
+      left: 15px;
+      z-index: 10;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      width: 180px;
+    }
+
+    #dropdownMenu button, #dropdownMenu label {
+      cursor: pointer;
+      background: #f7f0f7;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      text-align: left;
+      font-size: 14px;
+      color: #555;
+    }
+
+    #dropdownMenu button:hover, #dropdownMenu label:hover {
+      background-color: #f0e0f0;
+      color: #333;
+    }
+    
+    /* Opción para ver elementos guardados */
+    .saved-items-btn {
+      display: flex;
+      align-items: center;
+    }
+    
+    .saved-items-btn svg {
+      margin-right: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="sidebar">
+      <div class="profile-section" id="profileMenu">
+        <div class="profile-wrapper">
+          <img src="avatar.svg" alt="Perfil" class="profile-icon" id="profilePhoto">
+          <span id="profileName">Perfil</span>
+        </div>
+
+        <!-- Menú desplegable con todas las opciones -->
+        <div id="dropdownMenu">
+          <button id="editProfileBtnDropdown">Editar nombre</button>
+          <label>
+            Cambiar foto
+            <input type="file" id="photoInputDropdown" style="display: none;">
+          </label>
+          <button class="saved-items-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 21L12 16L5 21V5C5 4.46957 5.21071 3.96086 5.58579 3.58579C5.96086 3.21071 6.46957 3 7 3H17C17.5304 3 18.0391 3.21071 18.4142 3.58579C18.7893 3.96086 19 4.46957 19 5V21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Ver guardados
+          </button>
+          <button id="logoutBtnDropdown">Cerrar sesión</button>
+        </div>
+      </div>
+
+      <ul>
+        <li class="menu-option" data-option="history">History</li>
+        <li class="menu-option" data-option="play">Play</li>
+        <li class="menu-option" data-option="letter">Letter</li>
+        <li class="menu-option" data-option="gallery">Gallery</li>
+        <li class="menu-option" data-option="text">Text</li>
+      </ul>
+
+      <section class="comments-section">
+        <h3>Comentarios (Chat Global)</h3>
+        <div id="chatMessages" class="chat-messages"></div>
+        <div class="chat-input">
+          <input type="text" id="chatInput" placeholder="Escribe tu mensaje...">
+          <button id="sendChatBtn">Enviar</button>
+        </div>
+      </section>
+    </nav>
+
+    <main class="main-content" id="mainContent">
+      <h2>Hello @you</h2>
+      <div class="feed-placeholder pastel-bg">
+        <h2>Hola crzn ❤</h2>
+        <p> Esta es una página para ti, quiero decirte muchas cosas las cuáles no puedo expresar directamente por millones de razones pero aquí te las haré saber.</p>
+      </div>
+    </main>
+  </div>
+  
+  <script src="feed.js"></script>
+</body>
+</html>

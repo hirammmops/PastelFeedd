@@ -1,0 +1,383 @@
+/* Pastel Theme Color Variables - Enhanced */
+:root {
+  --pink-primary: #ffd1dc;
+  --pink-light: #ffe8ee;
+  --pink-dark: #ffb5c5;
+  --blue-light: #e0ecf7;
+  --green-light: #f4fbe8;
+  --white-warm: #fff5f7;
+  --accent-lavender: #e6e6fa;
+  --text-primary: #8b6b76;
+  --text-secondary: #a08b91;
+  --shadow-soft: rgba(255, 182, 193, 0.15);
+  --gradient-pastel: linear-gradient(135deg, #ffd1dc 0%, #e6e6fa 50%, #ffe8ee 100%);
+}
+
+body {
+  background: var(--gradient-pastel);
+  font-family: 'Inter', Arial, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  color: var(--text-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 22px;
+  box-shadow: 0 8px 28px var(--shadow-soft);
+  padding: 2em 2.5em;
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Feed Page Container */
+.container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+}
+.logo {
+  font-size: 2.4em;
+  margin-bottom: .7em;
+  letter-spacing: 1px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+.pastel {
+  background: linear-gradient(90deg, #74b3ce 32%, #df9fbf 75%);
+  -webkit-background-clip: text;
+  background-clip: text;  /* Standard property for better browser compatibility */
+  -webkit-text-fill-color: transparent;
+  color: transparent;     /* Fallback for browsers that don't support -webkit-text-fill-color */
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 280px;
+  background: rgba(255, 255, 255, 0.95);
+  border-right: 1px solid var(--pink-light);
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1rem;
+  box-shadow: 2px 0 15px var(--shadow-soft);
+}
+
+.profile-section {
+  text-align: center;
+  padding: 1.5rem;
+  border-bottom: 2px solid var(--pink-light);
+  margin-bottom: 1.5rem;
+  background: var(--gradient-pastel);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px var(--shadow-soft);
+}
+
+.profile-icon {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  border: 4px solid white;
+  padding: 3px;
+  margin-bottom: 1rem;
+  background: var(--white-warm);
+  box-shadow: 0 4px 15px var(--shadow-soft);
+  transition: transform 0.3s ease;
+}
+
+.profile-icon:hover {
+  transform: scale(1.05);
+}
+
+.profile-name {
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.menu-option {
+  padding: 1.2rem 1.8rem;  /* Increased padding to make buttons chubby */
+  margin: 0.6rem 0;        /* Slightly increased margin */
+  border-radius: 18px;     /* Increased border radius for softer corners */
+  color: #ff69b4;          /* Strong pink color for text */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+  border: 2px solid var(--pink-light);  /* Thicker border */
+  font-weight: 700;        /* Bold text */
+  font-family: 'Inter', 'Arial Black', sans-serif;  /* Wider font */
+  font-size: 1.1rem;       /* Slightly larger text */
+  text-align: center;      /* Center the text */
+  box-shadow: 0 4px 12px var(--shadow-soft);  /* Added shadow for depth */
+  transform: scale(1);     /* For the hover animation */
+}
+
+.menu-option:hover {
+  background: var(--gradient-pastel);
+  color: #ff1493;          /* Even stronger pink on hover */
+  transform: scale(1.05) translateX(5px); /* Slight grow effect + original slide */
+  border-color: #ff69b4;
+  font-weight: 800;        /* Extra bold on hover */
+}
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: .9em;
+}
+.input-group input {
+  border: none;
+  border-radius: 16px;
+  padding: .9em 1em;
+  background: #f3f6fb;
+  font-size: 1em;
+  outline: none;
+  margin-bottom: .2em;
+  box-shadow: 0 1px 5px 0 #e3e9f4;
+}
+.btn-primary,
+.btn-secondary,
+.edit-btn,
+.logout-btn {
+  border: none;
+  border-radius: 20px;
+  padding: .85em 1.2em;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px var(--shadow-soft);
+}
+
+.btn-primary {
+  background: var(--gradient-pastel);
+  color: var(--text-primary);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(90deg, #d4aee9 10%, #b2e0c9 90%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-soft);
+}
+
+.btn-secondary {
+  background: var(--pink-light);
+  color: var(--text-secondary);
+  margin-bottom: .5em;
+}
+
+.btn-secondary:hover {
+  background: var(--pink-dark);
+  transform: translateY(-2px);
+}
+
+.edit-btn {
+  background: var(--gradient-pastel);
+  color: var(--text-primary);
+  margin: 0.5rem;
+  border: 1px solid white;
+}
+
+.edit-btn:hover {
+  background: var(--pink-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-soft);
+}
+
+.logout-btn {
+  background: white;
+  color: var(--text-secondary);
+  margin: 0.5rem;
+  border: 1px solid var(--pink-light);
+}
+
+.logout-btn:hover {
+  background: #d8d8f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-soft);
+}
+
+.divider {
+  height: 1px;
+  width: 60%;
+  background: #e4dff5;
+  margin: 1.1em auto .9em auto;
+}
+.o-auth {
+  margin-top: 1em;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: .7em;
+}
+.oauth-btn {
+  width: 100%;
+  border-radius: 16px;
+  border: none;
+  padding: .85em 1em;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  cursor: pointer;
+  background: #f0f4fb;
+  color: #7b85ad;
+  transition: background .2s;
+}
+.oauth-btn.google:hover {
+  background: #f4e5e7;
+  color: #ea4335;
+}
+.oauth-btn.facebook:hover {
+  background: #e2e9fa;
+  color: #1877f3;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  background: var(--white-warm);
+  position: relative;
+}
+
+.feed-placeholder {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  text-align: center;
+  color: var(--text-secondary);
+  box-shadow: 0 4px 20px var(--shadow-soft);
+  margin: 2rem auto;
+  max-width: 600px;
+  border: 1px solid var(--pink-light);
+}
+
+/* Chat Section */
+.comments-section {
+  margin-top: auto;
+  padding: 1.5rem;
+  border-top: 2px solid var(--pink-light);
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 -4px 15px var(--shadow-soft);
+}
+
+.comments-section h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.chat-messages {
+  background: var(--white-warm);
+  border-radius: 15px;
+  padding: 1rem;
+  height: 250px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  border: 1px solid var(--pink-light);
+  box-shadow: inset 0 2px 4px var(--shadow-soft);
+}
+
+.chat-messages div {
+  margin: 0.7rem 0;
+  padding: 0.8rem;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 2px 8px var(--shadow-soft);
+  border: 1px solid var(--pink-light);
+  transition: transform 0.2s ease;
+}
+
+.chat-messages div:hover {
+  transform: translateY(-2px);
+}
+
+.chat-input {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.chat-input input {
+  flex: 1;
+  border: 2px solid var(--pink-light);
+  border-radius: 20px;
+  padding: 0.8rem 1.2rem;
+  outline: none;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.chat-input input:focus {
+  border-color: var(--pink-primary);
+  box-shadow: 0 0 0 4px var(--shadow-soft);
+}
+
+.chat-input button {
+  background: var(--gradient-pastel);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 20px;
+  padding: 0.8rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  box-shadow: 0 2px 8px var(--shadow-soft);
+}
+
+.chat-input button:hover {
+  background: var(--pink-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-soft);
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--white-warm);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gradient-pastel);
+  border-radius: 4px;
+  border: 2px solid var(--white-warm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--pink-dark);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--pink-light);
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container { width: 99vw; border-radius: 0; padding: 1em .5em;}
+  .logo {font-size: 2em;}
+}
