@@ -186,6 +186,232 @@ async function handleProfilePhoto(file) {
   }
 }
 
+// ============= NUEVA FUNCIONALIDAD: MANEJO DE IMÁGENES DEL FEED =============
+
+/**
+ * Sube una imagen del feed al servidor
+ * @param {File} file - Archivo de imagen a subir
+ * @returns {Promise<string|null>} URL de la imagen subida o null si falló
+ */
+async function uploadFeedImage(file) {
+  if (!file) return null;
+
+  // Validar el archivo
+  if (!file.type.startsWith('image/')) {
+    alert('Por favor, selecciona una imagen válida.');
+    return null;
+  }
+
+  const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+  if (file.size > MAX_SIZE) {
+    alert('La imagen es demasiado grande. El tamaño máximo es 10MB.');
+    return null;
+  }
+
+  // Crear un elemento de loading spinner
+  const uploadContainer = document.getElementById('uploadImageContainer');
+  const uploadImageElement = document.getElementById('uploadedImage');
+  const uploadInterface = document.querySelector('.image-upload');
+  
+  // Ocultar la interfaz de carga y mostrar el spinner
+  if (uploadInterface) {
+    uploadInterface.style.display = 'none';
+  }
+  
+  const spinner = document.createElement('div');
+  spinner.className = 'loading-spinner';
+  uploadContainer.appendChild(spinner);
+
+  try {
+    console.log(`Preparando envío de imagen: ${file.name} (${Math.round(file.size/1024)} KB)`);
+    
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('type', 'feed');  // Especificar que es una imagen del feed
+
+    // Intentar subir la imagen
+    const res = await fetch(`${API}/api/upload/image`, {
+      method: 'POST',
+      credentials: 'include',
+      body: formData
+    });
+
+    // Quitar el spinner
+    if (spinner) {
+      spinner.remove();
+    }
+
+    if (!res.ok) {
+      // Mostrar de nuevo la interfaz de carga en caso de error
+      if (uploadInterface) {
+        uploadInterface.style.display = 'flex';
+      }
+      
+      const errorData = await res.json().catch(() => ({ error: `Error HTTP: ${res.status}` }));
+      throw new Error(errorData.error || `Error al subir la imagen: ${res.status}`);
+    }
+
+    const data = await res.json();
+    
+    if (data.success && data.imageUrl) {
+      // Mostrar la imagen subida
+      if (uploadImageElement) {
+        uploadImageElement.src = data.imageUrl + `?t=${new Date().getTime()}`;
+        uploadImageElement.style.display = 'block';
+      }
+      
+      // Ocultar la interfaz de carga
+      if (uploadInterface) {
+        uploadInterface.style.display = 'none';
+      }
+      
+      // Guardar la imagen en el almacenamiento local para persistencia
+      saveFeedImageLocally(data.imageUrl);
+      
+      return data.imageUrl;
+    } else {
+      throw new Error('No se recibió la URL de la imagen');
+    }
+  } catch (err) {
+    console.error('Error al subir imagen al feed:', err);
+    alert('Error al subir la imagen: ' + err.message);
+    
+    // Mostrar de nuevo la interfaz de carga en caso de error
+    if (uploadInterface) {
+      uploadInterface.style.display = 'flex';
+    }
+    
+    return null;
+  }
+}
+
+/**
+ * Guarda la URL de la imagen del feed en el almacenamiento local
+ * @param {string} imageUrl - URL de la imagen subida
+ */
+function saveFeedImageLocally(imageUrl) {
+  try {
+    localStorage.setItem('feedUserImage', imageUrl);
+    console.log('Imagen guardada localmente:', imageUrl);
+  } catch (e) {
+    console.error('Error al guardar imagen localmente:', e);
+  }
+}
+
+/**
+ * Carga la imagen del feed desde el almacenamiento local o el servidor
+ */
+async function loadFeedImages() {
+  // Cargar imagen del primer contenedor (la que viene de la carpeta images)
+  const sharedImage = document.getElementById('sharedImage');
+  if (sharedImage) {
+    // Asumimos que esta imagen es estática y ya está establecida en el HTML
+    // Verificar si la imagen carga correctamente
+    sharedImage.onerror = function() {
+      console.error('Error al cargar la imagen compartida');
+      sharedImage.src = 'placeholder.svg'; // Imagen de reemplazo si falla
+    };
+  }
+  
+  // Cargar imagen del segundo contenedor (la que sube el usuario)
+  const uploadedImage = document.getElementById('uploadedImage');
+  const uploadInterface = document.querySelector('.image-upload');
+  
+  try {
+    // Primero intentar cargar desde localStorage
+    const localImageUrl = localStorage.getItem('feedUserImage');
+    
+    if (localImageUrl && uploadedImage) {
+      uploadedImage.src = localImageUrl + `?t=${new Date().getTime()}`;
+      uploadedImage.style.display = 'block';
+      
+      // Ocultar interfaz de carga si hay una imagen
+      if (uploadInterface) {
+        uploadInterface.style.display = 'none';
+      }
+    } else {
+      // Si no hay imagen local, intentar cargar desde el servidor
+      const res = await fetch(`${API}/api/user/feed-image`, {
+        credentials: 'include'
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        
+        if (data.imageUrl && uploadedImage) {
+          uploadedImage.src = data.imageUrl + `?t=${new Date().getTime()}`;
+          uploadedImage.style.display = 'block';
+          
+          // Guardar la URL para futuras cargas
+          saveFeedImageLocally(data.imageUrl);
+          
+          // Ocultar interfaz de carga
+          if (uploadInterface) {
+            uploadInterface.style.display = 'none';
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Error al cargar imagen del feed:', err);
+    // En caso de error, asegurarnos de que la interfaz de carga esté visible
+    if (uploadInterface) {
+      uploadInterface.style.display = 'flex';
+    }
+  }
+}
+
+/**
+ * Configura los eventos para la carga de imágenes del feed
+ */
+function setupImageUpload() {
+  const uploadBtn = document.getElementById('uploadImageBtn');
+  const imageInput = document.getElementById('imageInput');
+  const uploadedImage = document.getElementById('uploadedImage');
+  
+  if (!uploadBtn || !imageInput) return;
+  
+  // Evento para el botón de selección de imagen
+  uploadBtn.addEventListener('click', () => {
+    imageInput.click();
+  });
+  
+  // Evento para cuando se selecciona un archivo
+  imageInput.addEventListener('change', async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // Vista previa rápida antes de subir
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if (uploadedImage) {
+        uploadedImage.src = e.target.result;
+        uploadedImage.style.display = 'block';
+      }
+    };
+    reader.readAsDataURL(file);
+    
+    // Subir la imagen al servidor
+    try {
+      const imageUrl = await uploadFeedImage(file);
+      if (imageUrl) {
+        console.log('Imagen de feed subida con éxito:', imageUrl);
+      }
+    } catch (err) {
+      console.error('Error al subir imagen del feed:', err);
+    }
+  });
+  
+  // Si hay una imagen subida, permitir hacer clic para reemplazarla
+  if (uploadedImage) {
+    uploadedImage.addEventListener('click', () => {
+      if (confirm('¿Deseas reemplazar esta imagen?')) {
+        imageInput.click();
+      }
+    });
+  }
+}
+
 // ============= FUNCIONALIDAD DE CHAT Y MENSAJES =============
 
 /**
@@ -484,19 +710,69 @@ function handleMenuOption(optionType) {
       break;
     case 'letter':
       // Redirigir a la página letter.html
-      window.location.href = '/letter';
+      window.location.href = '/letter.html';
       break;
     case 'saved':
       loadSavedItems();
       break;
+    case 'text':
+      // Mostrar la pantalla principal con el diseño de feed completo
+      loadMainFeed();
+      break;
     default:
-      mainContent.innerHTML = `
-        <h2>Bienvenido a tu Feed</h2>
-        <div class="feed-placeholder pastel-bg">
-          <p>Selecciona una opción del menú para comenzar.</p>
-        </div>
-      `;
+      // Pantalla principal con el diseño de feed
+      loadMainFeed();
   }
+}
+
+/**
+ * Carga la pantalla principal con el contenido del feed.
+ * Respeta el contenido original del HTML y solo configura JS, no sobrescribe el HTML si ya existe.
+ */
+function loadMainFeed() {
+  const mainContent = document.getElementById('mainContent');
+  if (!mainContent) return;
+
+  // Si ya hay contenido (editado manualmente en feed.html), no sobrescribirlo
+  // Solo configurar la funcionalidad de JS para subir imágenes y cargar imagen del feed
+  if (mainContent.innerHTML.trim() === '' || mainContent.innerHTML.trim() === '<h2>Hello @you</h2>') {
+    // Inicializar contenido solo si está vacío
+    mainContent.innerHTML = `
+      <h2>Hello @you</h2>
+      <div class="main-container">
+        <!-- Contenedor de texto principal -->
+        <div class="text-container">
+          <h2>Hola crzn ❤</h2>
+          <p>Esta es una página para ti, quiero decirte muchas cosas las cuáles no puedo expresar directamente por millones de razones pero aquí te las haré saber.</p>
+        </div>
+        
+        <!-- Contenedores de imágenes -->
+        <div class="image-containers">
+          <!-- Primer contenedor de imagen estática personalizada -->
+          <div class="image-box" id="Camilateamo">
+            <img src="images/camyyo.png" alt="Imagen compartida" id="sharedImage">
+          </div>
+          
+          <!-- Segundo contenedor para subir una imagen -->
+          <div class="image-box" id="uploadImageContainer">
+            <div class="image-upload">
+              <div class="upload-icon">+</div>
+              <p class="upload-text">Sube una imagen aquí</p>
+              <button class="upload-btn" id="uploadImageBtn">Seleccionar imagen</button>
+              <input type="file" id="imageInput" accept="image/*">
+            </div>
+            <img src="" alt="Imagen subida" id="uploadedImage" style="display: none;">
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  
+  // Configurar la funcionalidad de carga de imágenes
+  setupImageUpload();
+  
+  // Cargar imágenes guardadas
+  loadFeedImages();
 }
 
 /**
@@ -664,6 +940,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Eventos para las opciones del menú lateral
   setupSidebarMenu();
+  
+  // Carga inicial de la vista principal
+  loadMainFeed();
 });
 
 // Cuando la página completa está cargada

@@ -81,6 +81,91 @@
     .saved-items-btn svg {
       margin-right: 6px;
     }
+
+    /* Nuevo estilo para el contenedor principal y las imágenes */
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .text-container {
+      text-align: center;
+      padding: 50px;
+      background-color: #faf4fa;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      font-size: 1.1em;
+      color: #9279b4;
+      min-height: 200px;
+    }
+
+    .image-containers {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .image-box {
+      flex: 1;
+      border-radius: 12px;
+      background-color: #faf4fa;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      overflow: hidden;
+      min-height: 200px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+    }
+
+    .image-upload {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+    }
+
+    .upload-icon {
+      font-size: 40px;
+      color: #c2b1ea;
+      margin-bottom: 10px;
+    }
+
+    .upload-text {
+      color: #9279b4;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .upload-btn {
+      background: #dfd3fc;
+      color: #664bb6;
+      border: none;
+      border-radius: 7px;
+      padding: 8px 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.19s;
+    }
+
+    .upload-btn:hover {
+      background: #c2b1ea;
+    }
+
+    #imageInput {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -128,10 +213,32 @@
     </nav>
 
     <main class="main-content" id="mainContent">
-      <h2>Hello @you</h2>
-      <div class="feed-placeholder pastel-bg">
-        <h2>Hola crzn ❤</h2>
-        <p> Esta es una página para ti, quiero decirte muchas cosas las cuáles no puedo expresar directamente por millones de razones pero aquí te las haré saber.</p>
+      <h2>Hi !</h2>
+      <div class="main-container">
+        <!-- Contenedor de texto principal -->
+        <div class="text-container">
+          <h2>Cami</h2>
+          <p>Esta es una página para ti, quiero decirte muchas cosas las cuáles no puedo expresar directamente por millones de razones pero aquí te las haré saber.</p>
+        </div>
+        
+        <!-- Contenedores de imágenes -->
+        <div class="image-containers">
+          <!-- Primer contenedor de imagen (con imagen preexistente) -->
+          <div class="image-box" id="Camilateamo">
+            <img src="images/camyyo.png" alt="Imagen compartida" id="sharedImage">
+          </div>
+          
+          <!-- Segundo contenedor para subir una imagen -->
+          <div class="image-box" id="uploadImageContainer">
+            <div class="image-upload">
+              <div class="upload-icon">+</div>
+              <p class="upload-text">Sube una imagen aquí</p>
+              <button class="upload-btn" id="uploadImageBtn">Seleccionar imagen</button>
+              <input type="file" id="imageInput" accept="image/*">
+            </div>
+            <img src="" alt="Imagen subida" id="uploadedImage" style="display: none;">
+          </div>
+        </div>
       </div>
     </main>
   </div>

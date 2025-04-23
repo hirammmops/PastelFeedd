@@ -122,6 +122,111 @@ ul {
   padding: 2.5em 2em;
   width: 100%;
 }
+
+/* Nuevo diseño para el contenedor principal y las imágenes */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  margin-top: 1.5em;
+}
+
+.text-container {
+  text-align: center;
+  padding: 50px;
+  background-color: #faf4fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  font-size: 1.1em;
+  color: #9279b4;
+  min-height: 200px;
+}
+
+.image-containers {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.image-box {
+  flex: 1;
+  border-radius: 12px;
+  background-color: #faf4fa;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  overflow: hidden;
+  min-height: 200px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+}
+
+.image-box img {
+  max-width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.image-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.upload-icon {
+  font-size: 40px;
+  color: #c2b1ea;
+  margin-bottom: 10px;
+}
+
+.upload-text {
+  color: #9279b4;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.upload-btn {
+  background: #dfd3fc;
+  color: #664bb6;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.19s;
+}
+
+.upload-btn:hover {
+  background: #c2b1ea;
+}
+
+#imageInput {
+  display: none;
+}
+
+/* Estilos para la animación de carga */
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(226, 202, 226, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid #dfd3fc;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .feed-placeholder {
   text-align: center;
   padding: 50px;
@@ -221,6 +326,9 @@ ul {
 @media (max-width: 680px) {
   .sidebar {width: 99vw;}
   .main-content {margin-left: 0; padding: .5em;}
+  .image-containers {
+    flex-direction: column;
+  }
 }
 #dropdownMenu {
   display: none;
